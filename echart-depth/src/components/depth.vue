@@ -1,18 +1,11 @@
 <template>
-  <div>
-
-    <depth />
-  </div>
+  <div></div>
 </template>
 
 <script>
-import depth from './depth'
 export default {
   data() {
     return {}
-  },
-  components: {
-    depth
   }
 }
 </script>
