@@ -8,6 +8,7 @@
 </template>
 <script>
 const echarts = require('echarts')
+import service from '../js/service.js'
 export default {
   name: 'Depth',
   data () {
@@ -34,6 +35,7 @@ export default {
     // ...mapGetters(['getKey'])
   },
   mounted () {
+    this.fetchData()
     clearInterval(this.id)
     this.getDepthData()
     // 定时刷新
@@ -52,6 +54,14 @@ export default {
     }
   },
   methods: {
+    // 请求数据
+    fetchData() {
+      let data = {}
+      const success = data => {
+        //
+      }
+      service.getDepth(data, success)
+    },
     // 得到路由携带值
     getQuery () {
       // if ()
