@@ -27,19 +27,18 @@ export default {
     }
   },
   watch: {
-    getKey () {
-      this.getDepthData('change')
-    }
+    // getKey () {
+    //   this.getDepthData('change')
+    // }
   },
   computed: {
     // ...mapGetters(['getKey'])
   },
   mounted () {
-    this.fetchData()
     clearInterval(this.id)
-    this.getDepthData()
+    this.fetchData()
     // 定时刷新
-    this.id = setInterval(this.getDepthData, this.cycle)
+    this.id = setInterval(this.fetchData, this.cycle)
     // 监听窗口变化
     window.onresize = () => {
       // $('#depth').removeAttr('_echarts_instance_')
@@ -57,8 +56,24 @@ export default {
     // 请求数据
     fetchData() {
       let data = {}
-      const success = data => {
-        //
+      const success = res => {
+        if (res.code === "0" && res.data) {
+          this.depthData = this.formatterDepth(res)
+          // console.log('#######请求完成#######')
+          // 处理数据 格式化
+          this.init()
+          this.setOption(this.depthData)
+        } else {
+          var data = {
+            data: {
+              bids: [],
+              asks: []
+            }
+          }
+          this.depthData = this.formatterDepth(data)
+          this.init()
+          this.setOption(this.depthData)
+        }
       }
       service.getDepth(data, success)
     },
@@ -89,6 +104,7 @@ export default {
       // })
     },
     formatterDepth (res) {
+      console.log(res)
       var bids = res.data.bids
       var asks = res.data.asks
       var bidsTotal = 0
@@ -154,6 +170,7 @@ export default {
       }
       var maxAmount = Math.max(bidsTotal, asksTotal)
       // console.log('#######数据格式化完成#######')
+
       return {
         maxAmount,
         maxBuyPrice,
@@ -168,8 +185,8 @@ export default {
         sellPercent
       }
     },
-    init (type) {
-      if (this.depth && type) {
+    init () {
+      if (this.depth) {
         this.depth.clear()
       }
       if (!this.depth) {
