@@ -104,7 +104,6 @@ export default {
       // })
     },
     formatterDepth (res) {
-      console.log(res)
       var bids = res.data.bids
       var asks = res.data.asks
       var bidsTotal = 0
